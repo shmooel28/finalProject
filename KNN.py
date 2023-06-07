@@ -32,40 +32,50 @@ labels = labels.astype(np.float32)
 features = features.astype(np.float32)
 features = features.values.reshape(features.shape[0], -1)
 
-# Split the data into training, validation, and testing sets
-X_train_val, X_test, y_train_val, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
-X_train, X_val, y_train, y_val = train_test_split(X_train_val, y_train_val, test_size=0.2, random_state=42)
+sum_test_acc = 0
+times_run = 20
+for _ in range(times_run):
+    # Split the data into training, validation, and testing sets
 
-print("X_train shape:", X_train.shape)
-print("X_val shape:", X_val.shape)
-print("X_test shape:", X_test.shape)
-print("y_train shape:", y_train.shape)
-print("y_val shape:", y_val.shape)
-print("y_test shape:", y_test.shape)
+    #X_train_val, X_test, y_train_val, y_test = train_test_split(features, labels, test_size=0.5, random_state=42)
+    #X_train, X_val, y_train, y_val = train_test_split(X_train_val, y_train_val, test_size=0.5, random_state=42)
+    X_train, X_val, y_train, y_val = train_test_split(features, labels, test_size=0.8, random_state=42)
 
-# Train SVM model
-svc = SVC(kernel='linear', C=1.0, random_state=42)
-svc.fit(X_train, y_train)
+    print("X_train shape:", X_train.shape)
+    print("X_val shape:", X_val.shape)
+    #print("X_test shape:", X_test.shape)
+    print("y_train shape:", y_train.shape)
+    print("y_val shape:", y_val.shape)
+    #print("y_test shape:", y_test.shape)
 
-# Train Decision Tree model
-dtc = DecisionTreeClassifier(max_depth=10, random_state=42)
-dtc.fit(X_train, y_train)
+    # Train SVM model
+    svc = SVC(kernel='linear', C=1.0, random_state=42)
+    svc.fit(X_train, y_train)
 
-# Train K-Nearest Neighbors model
-knn = KNeighborsClassifier(n_neighbors=5)
-knn.fit(X_train, y_train)
+    # Train Decision Tree model
+    dtc = DecisionTreeClassifier(max_depth=10, random_state=42)
+    dtc.fit(X_train, y_train)
 
-# Train Voting Classifier with SVM, Decision Tree, and KNN as base estimators
-voting_clf = VotingClassifier(estimators=[("svm", svc), ("dt", dtc), ("knn", knn)], voting='hard')
-voting_clf.fit(X_train, y_train)
+    # Train K-Nearest Neighbors model
+    knn = KNeighborsClassifier(n_neighbors=5)
+    knn.fit(X_train, y_train)
 
-# Evaluate the Voting Classifier model on the validation set
-y_pred = voting_clf.predict(X_val)
+    # Train Voting Classifier with SVM, Decision Tree, and KNN as base estimators
+    voting_clf = VotingClassifier(estimators=[("svm", svc), ("dt", dtc), ("knn", knn)], voting='hard')
+    voting_clf.fit(X_train, y_train)
 
-accuracy = accuracy_score(y_val, y_pred)
-conf_matrix = confusion_matrix(y_val, y_pred)
-f1 = f1_score(y_val, y_pred, average='weighted')
+    # Evaluate the Voting Classifier model on the validation set
+    #y_pred = voting_clf.predict(X_val)
+    y_pred = knn.predict(X_val)
 
-print("Validation Accuracy: {:.2f}%".format(accuracy * 100))
-print("Validation F1 Score: {:.2f}".format(f1))
-print("Confusion matrix:\n", conf_matrix)
+    accuracy = accuracy_score(y_val, y_pred)
+    conf_matrix = confusion_matrix(y_val, y_pred)
+    f1 = f1_score(y_val, y_pred, average='weighted')
+
+    print("Validation Accuracy: {:.2f}%".format(accuracy * 100))
+    print("Validation F1 Score: {:.2f}".format(f1))
+    print("Confusion matrix:\n", conf_matrix)
+    sum_test_acc+=accuracy
+
+avg_acc = sum_test_acc/times_run
+print("the average accuracy is: {:.2f}%".format(avg_acc*100))
