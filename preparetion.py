@@ -14,7 +14,7 @@ age_label2int = {
 char_map = {'a': '0', 'b': '1', 'c': '2'}
 
 # Load the CSV file into a Pandas DataFrame
-data = pd.read_excel("data_b.xlsx")
+data = pd.read_excel("data_b1.xlsx")
 
 # Extract the Period column as the labels (Y)
 labels = data["Period"]

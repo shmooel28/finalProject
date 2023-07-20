@@ -20,7 +20,7 @@ age_label2int = {
 data = pd.read_excel("data_b.xlsx")
 
 # Create a new DataFrame with only the "EB" and "CH" rows
-filtered_data = data.loc[data["Period"].isin(["EB", "CH"])]
+filtered_data = data.loc[data["Period"].isin(["EB", "CH","Top soil"])]
 
 # Convert the age labels to integers using the dictionary
 labels = filtered_data["Period"].apply(lambda x: age_label2int[x])
