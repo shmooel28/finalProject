@@ -1,11 +1,14 @@
 import numpy as np
 import pandas as pd
-from sklearn.svm import SVC
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import VotingClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, accuracy_score, confusion_matrix, f1_score
+from sklearn.metrics import classification_report, accuracy_score, f1_score
+import joblib
+import matplotlib.pyplot as plt
+
+# Initialize empty lists to store accuracy during training for KNN
+knn_train_acc_history = []
+knn_val_acc_history = []
 
 # Define a dictionary to map age labels to integers
 age_label2int = {
@@ -28,54 +31,47 @@ labels = filtered_data["Period"].apply(lambda x: age_label2int[x])
 features = filtered_data.drop("Period", axis=1)
 features = features.drop(features.columns[0], axis=1)
 
+# Convert the data types to float32
 labels = labels.astype(np.float32)
 features = features.astype(np.float32)
-features = features.values.reshape(features.shape[0], -1)
 
-sum_test_acc = 0
-times_run = 20
-for _ in range(times_run):
-    # Split the data into training, validation, and testing sets
+# Split the data into training, validation, and testing sets
+X_train_val, X_test, y_train_val, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
+X_train, X_val, y_train, y_val = train_test_split(X_train_val, y_train_val, test_size=0.3, random_state=42)
 
-    #X_train_val, X_test, y_train_val, y_test = train_test_split(features, labels, test_size=0.5, random_state=42)
-    #X_train, X_val, y_train, y_val = train_test_split(X_train_val, y_train_val, test_size=0.5, random_state=42)
-    X_train, X_val, y_train, y_val = train_test_split(features, labels, test_size=0.8, random_state=42)
+print("X_train shape:", X_train.shape)
+print("X_val shape:", X_val.shape)
+print("X_test shape:", X_test.shape)
+print("y_train shape:", y_train.shape)
+print("y_val shape:", y_val.shape)
+print("y_test shape:", y_test.shape)
 
-    print("X_train shape:", X_train.shape)
-    print("X_val shape:", X_val.shape)
-    #print("X_test shape:", X_test.shape)
-    print("y_train shape:", y_train.shape)
-    print("y_val shape:", y_val.shape)
-    #print("y_test shape:", y_test.shape)
+# Initialize the KNN model with the desired number of neighbors (e.g., 5)
+k_neighbors = 5
+knn_model = KNeighborsClassifier(n_neighbors=k_neighbors)
 
-    # Train SVM model
-    svc = SVC(kernel='linear', C=1.0, random_state=42)
-    svc.fit(X_train, y_train)
+# Train the KNN model on the training data
+knn_model.fit(X_train, y_train)
 
-    # Train Decision Tree model
-    dtc = DecisionTreeClassifier(max_depth=10, random_state=42)
-    dtc.fit(X_train, y_train)
+# Evaluate the KNN model on the validation set
+y_pred_knn = knn_model.predict(X_val)
 
-    # Train K-Nearest Neighbors model
-    knn = KNeighborsClassifier(n_neighbors=5)
-    knn.fit(X_train, y_train)
+knn_accuracy = accuracy_score(y_val, y_pred_knn)
+knn_f1 = f1_score(y_val, y_pred_knn, average='weighted')
 
-    # Train Voting Classifier with SVM, Decision Tree, and KNN as base estimators
-    voting_clf = VotingClassifier(estimators=[("svm", svc), ("dt", dtc), ("knn", knn)], voting='hard')
-    voting_clf.fit(X_train, y_train)
+print("Validation Accuracy (KNN): {:.2f}%".format(knn_accuracy * 100))
+print("Validation F1 Score (KNN): {:.2f}".format(knn_f1))
 
-    # Evaluate the Voting Classifier model on the validation set
-    #y_pred = voting_clf.predict(X_val)
-    y_pred = knn.predict(X_val)
+# Evaluate the KNN model on the test set
+y_pred_knn_test = knn_model.predict(X_test)
 
-    accuracy = accuracy_score(y_val, y_pred)
-    conf_matrix = confusion_matrix(y_val, y_pred)
-    f1 = f1_score(y_val, y_pred, average='weighted')
+knn_accuracy_test = accuracy_score(y_test, y_pred_knn_test)
+knn_f1_test = f1_score(y_test, y_pred_knn_test, average='weighted')
 
-    print("Validation Accuracy: {:.2f}%".format(accuracy * 100))
-    print("Validation F1 Score: {:.2f}".format(f1))
-    print("Confusion matrix:\n", conf_matrix)
-    sum_test_acc+=accuracy
+print("Test Accuracy (KNN): {:.2f}%".format(knn_accuracy_test * 100))
+print("Test F1 Score (KNN): {:.2f}".format(knn_f1_test))
 
-avg_acc = sum_test_acc/times_run
-print("the average accuracy is: {:.2f}%".format(avg_acc*100))
+# Save the trained KNN model to a file
+knn_model_filename = "knn_model.sav"
+joblib.dump(knn_model, knn_model_filename)
+
