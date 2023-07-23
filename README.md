@@ -9,9 +9,15 @@ The full data set is still in development. The current available data is located
 ## Training
 We created 3 different Types of models for training. To train a single model run one of the following command:
 
+Decision tree model training:
+
     python Decision_tree.py
 
+KNN model training:
+
     python KNN.py
+
+SVM model training:
 
     python SVM.py
     
