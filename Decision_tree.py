@@ -5,13 +5,14 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, f1_score
 import joblib
 
-
-# Define a dictionary to map age labels to integers
+# Define a dictionary to map age labels to integers, if you want to add more ages, you need to add them here
 age_label2int = {
-    "EB": 0,
-    "CH": 1,
-    "Top soil": 2,
+    "Top soil": 0,
+    "EB": 1,
+    "CH": 2,
+    "Hamra": 3,
 }
+
 
 def train(features, labels):
     # Split the data into training and testing sets
@@ -35,18 +36,21 @@ def train(features, labels):
 
     return accuracy
 
+
 if __name__ == "__main__":
-    # Load the Excel file into a Pandas DataFrame
+    # Load the Excel file into a Pandas DataFrame - the name of the xlsx file
     data = pd.read_excel("data_b.xlsx")
 
-    # Create a new DataFrame with only the "EB" and "CH" rows
+    # Create a new DataFrame with only the ages that you want to learn, in this case we not load Hamra because we don't
+    # have enough data
     filtered_data = data.loc[data["Period"].isin(["EB", "CH", "Top soil"])]
 
     # Convert the age labels to integers using the dictionary
     labels = filtered_data["Period"].apply(lambda x: age_label2int[x])
 
     features = filtered_data.drop("Period", axis=1)
-    # Extract the rest of the columns as the features (X) and drop unnecessary columns
+    # Extract the rest of the columns as the features (X) and drop unnecessary columns, this is with the assumption you
+    # don't have any not necessary columns
     features = features.drop(features.columns[0], axis=1)
 
     # Convert the data types to float32
@@ -54,8 +58,9 @@ if __name__ == "__main__":
     features = features.astype(np.float32)
     sum_test_acc = 0
     times_run = 20
+    # Runs the model 20 times to get reliable results
     for _ in range(times_run):
-        sum_test_acc += train(features,labels)
+        sum_test_acc += train(features, labels)
     avg_acc = sum_test_acc / times_run
     print("The average accuracy is: {:.2f}%".format(avg_acc * 100))
     dt_model = DecisionTreeClassifier()

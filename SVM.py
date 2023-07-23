@@ -2,14 +2,10 @@ import numpy as np
 import pandas as pd
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, f1_score
 import joblib
-import matplotlib.pyplot as plt
 
-# Initialize empty lists to store accuracy during training
-train_acc_history = []
-val_acc_history = []
-# Define a dictionary to map age labels to integers
+# Define a dictionary to map age labels to integers, if you want to add more ages, you need to add them here
 age_label2int = {
     "Top soil": 0,
     "EB": 1,
@@ -17,16 +13,18 @@ age_label2int = {
     "Hamra": 3,
 }
 
-# Load the Excel file into a Pandas DataFrame
+# Load the Excel file into a Pandas DataFrame - the name of the xlsx file
 data = pd.read_excel("data_b.xlsx")
 
-# Create a new DataFrame with only the "EB" and "CH" rows
+# Create a new DataFrame with only the ages that you want to learn, in this case we not load Hamra because we don't
+# have enough data
 filtered_data = data.loc[data["Period"].isin(["EB", "CH","Top soil"])]
 
 # Convert the age labels to integers using the dictionary
 labels = filtered_data["Period"].apply(lambda x: age_label2int[x])
 
-# Extract the rest of the columns as the features (X) and drop unnecessary columns
+# Extract the rest of the columns as the features (X) and drop unnecessary columns, this is with the assumption you
+# don't have any not necessary columns
 features = filtered_data.drop("Period", axis=1)
 features=features.drop(features.columns[0], axis=1)
 # Convert the data types to float32
