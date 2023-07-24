@@ -1,8 +1,19 @@
 ## Introduction
-* The program will receive pre-exist parameters from the researcher and export sediment dating of the ground, using machine learning methods.
+* The project goal is creating a method based on Pulsated Optically Stimulated Luminescence (POSL) and artificial intelligence (AI) algorithms to
+  provide an age estimate for any sediment. We aim to provide a toolkit for rapid, highly accurate age estimation in cases
+  where there are no ceramic finds in sediments.
 
-* Sediments dated by clay will be characterized by parameters of chemical and mineralogical composition, and Optically Stimulated Luminescenc (OSL) signal. The OSL signal accumulated in the soil grains during their burial. The more time that passes, the value of the signal increase.
 * The program will help to quickly date, while excavating, sediments that do not have an obvious date. This is a tool with great potential to improve the fieldwork of archaeologists. 
+
+## Background information
+Dating stratigraphy is a critical part of archaeological site research. One way to date non-ceramic remnants is to 
+use POSL on sediments (rock fragments of size at most 2mm). Sediment contains quartz, and when buried 
+underground it absorbs radiation from the soil around it. The longer the sediment is buried, the more radiation it 
+absorbs. The POSL machine stimulates the radiation stored in the quartz, and then measures the photons 
+escape the sediment. The older the sediment is, the more photons will be detected.
+The process of dating stratigraphic layers that have non-ceramic remnants can take several months. This has 
+led archaeologists to seek advanced tools for establishing layer dates in real-time, in order to make more 
+informed and effective decisions regarding the progress of the excavation.
 
 
 
