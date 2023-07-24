@@ -27,7 +27,7 @@ The full data set is still in development. The current available data is located
 
 
 ## Training
-We created 3 different Types of models for training. To train a single model run one of the following command:
+Given the relative lack of aviliable data, we created 3 different Types of models for training. To train a single model run one of the following command:
 
 #### Decision tree model training:
 
@@ -42,3 +42,6 @@ We created 3 different Types of models for training. To train a single model run
     python SVM.py
     
 ## Testing
+for testing, we created a simple GUI interface for users. In order to activate it, run the following command:
+
+    python GUI.py
