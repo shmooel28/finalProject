@@ -5,6 +5,9 @@
 
 * The program will help to quickly date, while excavating, sediments that do not have an obvious date. This is a tool with great potential to improve the fieldwork of archaeologists. 
 
+![selution](https://github.com/shmooel28/finalProject/blob/master/utils/selution.png)
+
+
 ## Background information
 Dating stratigraphy is a critical part of archaeological site research. One way to date non-ceramic remnants is to 
 use POSL on sediments (rock fragments of size at most 2mm). Sediment contains quartz, and when buried 
@@ -14,6 +17,8 @@ escape the sediment. The older the sediment is, the more photons will be detecte
 The process of dating stratigraphic layers that have non-ceramic remnants can take several months. This has 
 led archaeologists to seek advanced tools for establishing layer dates in real-time, in order to make more 
 informed and effective decisions regarding the progress of the excavation.
+
+![what are sediments](https://github.com/shmooel28/finalProject/blob/master/utils/what%20are%20sediment.png)
 
 
 
