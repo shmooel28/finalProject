@@ -44,4 +44,4 @@ Given the relative lack of aviliable data, we created 3 different Types of model
 ## Testing
 for testing, we created a simple GUI interface for users. In order to activate it, run the following command:
 
-    python GUI.py
+    python test.py
